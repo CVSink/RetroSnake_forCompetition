@@ -2,6 +2,7 @@
 using namespace std;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 bool check(point snake[5][100], int len[5], int t, GamePanel gp, int direction ) 
 {
 	if (snake[t][1].y == gp.m && direction == 1) return false;
@@ -69,6 +70,8 @@ bool check(point snake[5][100], int len[5], int t, GamePanel gp, int direction )
 		}
 	}
 =======
+=======
+>>>>>>> parent of ceaf48b... 1st test project commit
 
 bool check(point snake[5][100], int len[5], int t, GamePanel gp, int direction ) 
 {
@@ -79,6 +82,7 @@ bool check(point snake[5][100], int len[5], int t, GamePanel gp, int direction )
 	return true;
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 class graph {
 public:
@@ -91,6 +95,10 @@ int machine_move(point snake[5][100], int len[5], int direct[5], int t, GamePane
 {
 //	int map[2500][2500];
 	return 3;
+=======
+int machine_move(point snake[5][100], int len[5], int direct[5], int t, GamePanel gp)	
+{
+>>>>>>> parent of ceaf48b... 1st test project commit
 =======
 int machine_move(point snake[5][100], int len[5], int direct[5], int t, GamePanel gp)	
 {
