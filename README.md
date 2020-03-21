@@ -1,2 +1,2 @@
-# RetroSnake-for-competition-
+# MetroSnake-for-competition-
 Data consturcture project Problem B
