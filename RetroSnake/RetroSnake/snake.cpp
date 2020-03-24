@@ -342,10 +342,12 @@ int main()
 			rand_food(snake, len, gp);
 			if (gp.speedowner == -1)
 			{
+				move(1 - t, snake, len, direct, gp, iterationtime);
 				move(t, snake, len, direct, gp, iterationtime);
 			}
 			else if (gp.speedowner == t)
 			{
+				move(1 - t, snake, len, direct, gp, iterationtime);
 				move(t, snake, len, direct, gp, iterationtime);
 				move(t, snake, len, direct, gp, iterationtime);
 			}
