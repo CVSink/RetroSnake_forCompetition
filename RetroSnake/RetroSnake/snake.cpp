@@ -348,7 +348,8 @@ int main()
 			else if (gp.speedowner == t)
 			{
 				move(1 - t, snake, len, direct, gp, iterationtime);
-				move(t, snake, len, direct, gp, iterationtime);
+	//			move(1 - t, snake, len, direct, gp, iterationtime);
+	//			move(t, snake, len, direct, gp, iterationtime);
 				move(t, snake, len, direct, gp, iterationtime);
 			}
 

@@ -347,19 +347,124 @@ int machine_move(point snake[5][100], int len[5], int direct[5], int t, GamePane
 	int headX = snake[t][1].x;
 	int headY = snake[t][1].y;
 
-	
+	//统计食物数
+	int num1 = 0, num2 = 0, num3 = 0, num4 = 0;
+	for (int i = 0; i < gp.totalfoodnum; i++) {
+		if (gp.panel[gp.food[i].x][gp.food[i].y] == 1) {
+			if (gp.food[i].x < 14 && gp.food[i].y < 38)
+				num1++;
+			else if (gp.food[i].x >= 14 && gp.food[i].y < 38)
+				num2++;
+			else if (gp.food[i].x < 14 && gp.food[i].y >= 38)
+				num3++;
+			else if (gp.food[i].x >= 14 && gp.food[i].y >= 38)
+				num4++;
+		}
+	}
 
-	int j;
-	if (snake[t][1].x < 14 && snake[t][1].y < 38) {
+
+	//前往高价值区域
+	if (snake[t][1].x <= 14 && snake[t][1].y <= 38) {
+		if (num2 - num1 >= 3 || (num1 == 0 && num2 > 0)) {
+			if (check(snake, len, t, gp, 0))
+				return 0;
+			if (check(snake, len, t, gp, 1))
+				return 1;
+			if (check(snake, len, t, gp, 2))
+				return 2;
+			if (check(snake, len, t, gp, 3))
+				return 3;
+		}
+		if (num3 - num1 >= 3 || (num1 == 0 && num3 > 0)) {
+			if (check(snake, len, t, gp, 1))
+				return 1;
+			if (check(snake, len, t, gp, 2))
+				return 2;
+			if (check(snake, len, t, gp, 3))
+				return 3;
+			if (check(snake, len, t, gp, 4))
+				return 0;
+		}
+	}
+	else if (snake[t][1].x > 14 && snake[t][1].y <= 38) {
+		if (num1 - num2 >= 3 || (num2 == 0 && num1 > 0)) {
+			if (check(snake, len, t, gp, 3))
+				return 3;
+			if (check(snake, len, t, gp, 1))
+				return 1;
+			if (check(snake, len, t, gp, 2))
+				return 2;
+			if (check(snake, len, t, gp, 0))
+				return 0;
+		}
+		if (num4 - num2 >= 3 || (num2 == 0 && num4 > 0)) {
+			if (check(snake, len, t, gp, 1))
+				return 1;
+			if (check(snake, len, t, gp, 2))
+				return 2;
+			if (check(snake, len, t, gp, 3))
+				return 3;
+			if (check(snake, len, t, gp, 0))
+				return 0;
+		}
+	}
+	else if (snake[t][1].x <= 14 && snake[t][1].y > 38) {
+		if (num1 - num3 >= 3 || (num3 == 0 && num1 > 0)) {
+			if (check(snake, len, t, gp, 2))
+				return 2;
+			if (check(snake, len, t, gp, 1))
+				return 1;
+			if (check(snake, len, t, gp, 3))
+				return 3;
+			if (check(snake, len, t, gp, 0))
+				return 0;
+		}
+		if (num4 - num3 >= 3 || (num3 == 0 && num4 > 0)) {
+			if (check(snake, len, t, gp, 0))
+				return 0;
+			if (check(snake, len, t, gp, 1))
+				return 1;
+			if (check(snake, len, t, gp, 2))
+				return 2;
+			if (check(snake, len, t, gp, 3))
+				return 3;
+		}
+	}
+	else if (snake[t][1].x > 14 && snake[t][1].y > 38) {
+		if (num2 - num4 >= 3 || (num4 == 0 && num2 > 0)) {
+			if (check(snake, len, t, gp, 2))
+				return 2;
+			if (check(snake, len, t, gp, 1))
+				return 1;
+			if (check(snake, len, t, gp, 3))
+				return 3;
+			if (check(snake, len, t, gp, 0))
+				return 0;
+		}
+		if (num3 - num4 >= 3 || (num4 == 0 && num3 > 0)) {
+			if (check(snake, len, t, gp, 3))
+				return 3;
+			if (check(snake, len, t, gp, 1))
+				return 1;
+			if (check(snake, len, t, gp, 2))
+				return 2;
+			if (check(snake, len, t, gp, 0))
+				return 0;
+		}
+	}
+
+
+	int j = -1;
+	if (snake[t][1].x <= 14 && snake[t][1].y <= 38 && num1>0) {
 		AllLength(19 * 14, block1, A, path);
 		headX = headX - 1;
-		if (headY % 2 == 0)
+	//	if (headY % 2 == 0)
 			headY = headY / 2 - 1;
-		else
-			headY = headY / 2;
-		
+	//	else
+	//		headY = headY / 2;
+
 		int min = 9999;
-		int target;
+		int target = -1;
 		for (int i = 0; i < gp.totalfoodnum; ++i) {
 			if (gp.panel[gp.food[i].x][gp.food[i].y] == 1) {
 				if (gp.food[i].x - 1 < 14 && gp.food[i].y / 2 < 19) {
@@ -370,21 +475,23 @@ int machine_move(point snake[5][100], int len[5], int direct[5], int t, GamePane
 				}
 			}
 		}
-		j = gp.food[target].x - 1 + (gp.food[target].y / 2 - 1) * 14;
-		while (path[headX + headY * 14][j] != headX + headY * 14) {
-			j = path[headX + headY * 14][j];
+		if(target != -1) {
+			j = gp.food[target].x - 1 + (gp.food[target].y / 2 - 1) * 14;
+			while (path[headX + headY * 14][j] != headX + headY * 14) {
+				j = path[headX + headY * 14][j];
+			}
 		}
 	}
-	else if (snake[t][1].x >= 14 && snake[t][1].y < 38) {
+	else if (snake[t][1].x > 14 && snake[t][1].y <= 38 && num2>0) {
 		AllLength(19 * 14, block2, A, path);
 		headX = headX - 14 - 1;
-		if (headY % 2 == 0)
+	//	if (headY % 2 == 0)
 			headY = headY / 2 - 1;
-		else
-			headY = headY / 2;
-		
+	//	else
+	//		headY = headY / 2;
+
 		int min = 9999;
-		int target;
+		int target = -1;
 		for (int i = 0; i < gp.totalfoodnum; ++i) {
 			if (gp.panel[gp.food[i].x][gp.food[i].y] == 1) {
 				if (gp.food[i].x - 1 >= 14 && gp.food[i].y / 2 < 19) {
@@ -395,21 +502,23 @@ int machine_move(point snake[5][100], int len[5], int direct[5], int t, GamePane
 				}
 			}
 		}
-		j = gp.food[target].x - 14 - 1 + (gp.food[target].y / 2 - 1) * 14;
-		while (path[headX + headY * 14][j] != headX + headY * 14) {
-			j = path[headX + headY * 14][j];
+		if (target != -1) {
+			j = gp.food[target].x - 14 - 1 + (gp.food[target].y / 2 - 1) * 14;
+			while (path[headX + headY * 14][j] != headX + headY * 14) {
+				j = path[headX + headY * 14][j];
+			}
 		}
 	}
-	else if (snake[t][1].x < 14 && snake[t][1].y >= 38) {
+	else if (snake[t][1].x <= 14 && snake[t][1].y > 38 && num3>0) {
 		AllLength(19 * 14, block3, A, path);
 		headX = headX - 1;
-		if (headY % 2 == 0)
+	//	if (headY % 2 == 0)
 			headY = headY / 2 - 19 - 1;
-		else
-			headY = headY / 2 - 19;
-		
+	//	else
+	//		headY = headY / 2 - 19;
+
 		int min = 9999;
-		int target;
+		int target = -1;
 		for (int i = 0; i < gp.totalfoodnum; ++i) {
 			if (gp.panel[gp.food[i].x][gp.food[i].y] == 1) {
 				if (gp.food[i].x - 1 < 14 && gp.food[i].y / 2 >= 19) {
@@ -420,21 +529,24 @@ int machine_move(point snake[5][100], int len[5], int direct[5], int t, GamePane
 				}
 			}
 		}
-		j = gp.food[target].x - 1 + (gp.food[target].y / 2 - 19 - 1) * 14;
-		while (path[headX + headY * 14][j] != headX + headY * 14) {
-			j = path[headX + headY * 14][j];
+		if (target != -1) {
+			j = gp.food[target].x - 1 + (gp.food[target].y / 2 - 19 - 1) * 14;
+			if(j>0)
+			while (path[headX + headY * 14][j] != headX + headY * 14) {
+				j = path[headX + headY * 14][j];
+			}
 		}
 	}
-	else if (snake[t][1].x >= 14 && snake[t][1].y >= 38) {
+	else if (snake[t][1].x > 14 && snake[t][1].y > 38 && num4 > 0) {
 		AllLength(19 * 14, block4, A, path);
 		headX = headX - 14 - 1;
-		if (headY % 2 == 0)
+	//	if (headY % 2 == 0)
 			headY = headY / 2 - 19 - 1;
-		else
-			headY = headY / 2 - 19;
-		
+	//	else
+	//		headY = headY / 2 - 19;
+
 		int min = 9999;
-		int target;
+		int target = -1;
 		for (int i = 0; i < gp.totalfoodnum; ++i) {
 			if (gp.panel[gp.food[i].x][gp.food[i].y] == 1) {
 				if (gp.food[i].x - 1 >= 14 && gp.food[i].y / 2 >= 19) {
@@ -445,18 +557,47 @@ int machine_move(point snake[5][100], int len[5], int direct[5], int t, GamePane
 				}
 			}
 		}
-		j = gp.food[target].x - 14 - 1 + (gp.food[target].y / 2 - 19 - 1) * 14;
-		while (path[headX + headY * 14][j] != headX + headY * 14) {
-		//	if (j < 0) system("pause");
-			j = path[headX + headY * 14][j];
+		if (target != -1) {
+			j = gp.food[target].x - 14 - 1 + (gp.food[target].y / 2 - 19 - 1) * 14;
+			if(j>0)
+			while (path[headX + headY * 14][j] != headX + headY * 14) {
+				//	if (j < 0) system("pause");
+				j = path[headX + headY * 14][j];
+			}
 		}
 	}
-	int x = j % 14;
-	int y = j / 14;
-	if (y > headY) return 1;	//up	//////bug
-	if (y < headY) return 2;	//down
-	if (y == headY && x < headX) return 3;	//left
-	if (y == headY && x > headX) return 0;	//right
+	if (j != -1) {
+		int x = j % 14;
+		int y = j / 14;
+		if (y > headY) {
+			if (check(snake, len, t, gp, 1))
+				return 1;
+		}
+		if (y < headY) {
+			if (check(snake, len, t, gp, 2))
+				return 2;
+		}
+		if (y == headY && x < headX) {
+			if (check(snake, len, t, gp, 3))
+				return 3;
+		}
+		if (y == headY && x > headX)	{
+			if (check(snake, len, t, gp, 0))
+				return 0;
+		}
+	}
+
+	//选择价值大的区域
+	if (check(snake, len, t, gp, 0))
+		return 0;
+	if (check(snake, len, t, gp, 1))
+		return 1;
+	if (check(snake, len, t, gp, 2))
+		return 2;
+	if (check(snake, len, t, gp, 3))
+		return 3;
+
+
 
 	//将你的check函数体放在此处，并删去下面示例代码
 	if (t == 0) return 2;
